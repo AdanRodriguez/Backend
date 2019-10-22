@@ -35,53 +35,6 @@ public class UserController
     @Autowired
     private UserService userService;
 
-    // http://localhost:2019/users/users/?page=1&size=1
-    // http://localhost:2019/users/users/?sort=username,desc&sort=<field>,asc
-    @ApiOperation(value = "returns all Users",
-                  response = User.class,
-                  responseContainer = "List")
-    @ApiImplicitParams({@ApiImplicitParam(name = "page",
-                                          dataType = "integer",
-                                          paramType = "query",
-                                          value = "Results page you want to retrieve (0..N)"), @ApiImplicitParam(name = "size",
-                                                                                                                 dataType = "integer",
-                                                                                                                 paramType = "query",
-                                                                                                                 value = "Number of records per page."), @ApiImplicitParam(name = "sort",
-                                                                                                                                                                           allowMultiple = true,
-                                                                                                                                                                           dataType = "string",
-                                                                                                                                                                           paramType = "query",
-                                                                                                                                                                           value = "Sorting criteria in the format: property(,asc|desc). " + "Default sort order is ascending. " + "Multiple sort criteria are supported.")})
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @GetMapping(value = "/users",
-                produces = {"application/json"})
-    public ResponseEntity<?> listAllUsers(HttpServletRequest request,
-                                          @PageableDefault(page = 0,
-                                                           size = 5)
-                                                  Pageable pageable)
-    {
-        logger.trace(request.getMethod()
-                .toUpperCase() + " " + request.getRequestURI() + " accessed");
-
-        List<User> myUsers = userService.findAll(pageable);
-        return new ResponseEntity<>(myUsers,
-                HttpStatus.OK);
-    }
-
-    //GET http://localhost:2019/users/users/all
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @GetMapping(value = "/users/all",
-                produces = {"application/json"})
-    public ResponseEntity<?> reallyListAllUsers(HttpServletRequest request)
-    {
-        logger.trace(request.getMethod()
-                .toUpperCase() + " " + request.getRequestURI() + " accessed");
-
-        List<User> myUsers = userService.findAll(Pageable.unpaged());
-        return new ResponseEntity<>(myUsers,
-                HttpStatus.OK);
-    }
-
-
     // http://localhost:2019/users/user/7
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/user/{userId}",
